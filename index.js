@@ -10,6 +10,9 @@ connectDB();
 // App port
 const PORT = process.env.PORT || 4000;
 
+// Import Routes 
+app.use('/api/grants', require('./routes/grants'));
+
 
 // Run app
 app.listen(PORT, () => {
