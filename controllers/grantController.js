@@ -7,8 +7,16 @@ exports.getGrants = (req, res) => {
 
 exports.updateGrants = async (req, res) => {
     console.log('From updateGrants');
+
+    // extract id
+    const { id } = req.body;
+
     try {
-        let grant;
+        // validate that the grant is unique
+        let grant = await Grant.findOne({ _id: id });
+        if ( grant ) {
+            return res.status(400).json({ msg: 'Grant already exists' });
+        }
 
         // create new grant
         grant = new Grant({ ...req.body, _id: req.body.id });
@@ -17,7 +25,7 @@ exports.updateGrants = async (req, res) => {
         await grant.save();
 
         // confirmation message
-        res.send('Grant created');
+        res.json({ msg: 'Grant created' });
     } catch (error) {
         console.log(error);
         res.status(400).send('There was an error');
