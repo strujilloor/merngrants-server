@@ -9,6 +9,7 @@ router.get('/',
     grantController.getGrants
 );
 
+// Update Grants
 router.post('/update',
     grantController.updateGrants
 );

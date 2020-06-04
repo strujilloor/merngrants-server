@@ -1,8 +1,15 @@
 const Grant = require('../models/Grant');
 
-exports.getGrants = (req, res) => {
+exports.getGrants = async (req, res) => {
     console.log('From getGrants');
-    res.status(200).send({message: "Server Up"});
+    // res.status(200).send({message: "Server Up"});
+    try {
+        const grants = await Grant.find().sort({ openDate: -1 });
+        res.json({ grants });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('There was an error');
+    }
 }
 
 exports.updateGrants = async (req, res) => {
@@ -25,7 +32,8 @@ exports.updateGrants = async (req, res) => {
         await grant.save();
 
         // confirmation message
-        res.json({ msg: 'Grant created' });
+        // res.json({ msg: 'Grant created' });
+        res.json( grant );
     } catch (error) {
         console.log(error);
         res.status(400).send('There was an error');
