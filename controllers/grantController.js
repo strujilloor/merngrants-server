@@ -5,7 +5,19 @@ exports.getGrants = async (req, res) => {
     console.log('From getGrants');
     // res.status(200).send({message: "Server Up"});
     try {
-        const grants = await Grant.find().sort({ openDate: -1 });
+        const pagination = req.query.pagination
+            ? parseInt(req.query.pagination)
+            : 5;
+
+        const page = req.query.page
+            ? parseInt(req.query.page)
+            : 1;
+            
+        const grants = await Grant.find()
+            .skip((page - 1) * pagination) // skip n elements (ex: (pag 2 - 1) * 20 = 20, skip 20 elements)
+            .limit(pagination) // amount of data to bring
+            .sort({ openDate: -1 });
+
         res.json({ grants });
     } catch (error) {
         console.log(error);
