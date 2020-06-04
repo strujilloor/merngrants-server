@@ -1,4 +1,5 @@
 const Grant = require('../models/Grant');
+const axios = require('axios');
 
 exports.getGrants = async (req, res) => {
     console.log('From getGrants');
@@ -15,25 +16,33 @@ exports.getGrants = async (req, res) => {
 exports.updateGrants = async (req, res) => {
     console.log('From updateGrants');
 
-    // extract id
-    const { id } = req.body;
-
     try {
-        // validate that the grant is unique
-        let grant = await Grant.findOne({ _id: id });
-        if ( grant ) {
-            return res.status(400).json({ msg: 'Grant already exists' });
-        }
+        // Get grants from grants.gov
+        const response = await axios.post('https://www.grants.gov/grantsws/rest/opportunities/search/', {startRecordNum: 0, sortBy: "openDate|desc", oppStatuses: "forecasted|posted", rows: 10});
+        // note: change the amount of data with rows (1000)
 
-        // create new grant
-        grant = new Grant({ ...req.body, _id: req.body.id });
+        const grants = response.data.oppHits;
 
-        // save grant
-        await grant.save();
+        // Update and validate if grant exists
+        let newGrant;
+        let grantExists
+
+        grants.forEach( async (grant) => {
+            // validate that the grant is unique
+            grantExists = await Grant.findOne({ id: grant.id });
+            if ( !grantExists ) {
+                // create new grant
+                newGrant = new Grant({ ...grant });
+                // save grant
+                await newGrant.save();
+            } else {
+                console.log('Grant already exist');
+            }
+        });
 
         // confirmation message
-        // res.json({ msg: 'Grant created' });
-        res.json( grant );
+        res.json({ msg: 'Grants Updated' });
+        // res.json( grants );
     } catch (error) {
         console.log(error);
         res.status(400).send('There was an error');

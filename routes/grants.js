@@ -10,7 +10,7 @@ router.get('/',
 );
 
 // Update Grants
-router.post('/update',
+router.get('/update',
     grantController.updateGrants
 );
 

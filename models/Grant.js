@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const GrantsSchema = mongoose.Schema({
-    _id: {
+    id: {
         type: String,
         // type: mongoose.ObjectId,
         require: true,
@@ -48,7 +48,7 @@ const GrantsSchema = mongoose.Schema({
         require: true,
         trim: true
     }
-}, { _id: false });
+}, { id: false });
 
 
 module.exports = mongoose.model( 'Grant', GrantsSchema );
