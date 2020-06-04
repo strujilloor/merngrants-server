@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 
 const GrantsSchema = mongoose.Schema({
-    id: {
-        // type: String,
-        type: mongoose.ObjectId,
+    _id: {
+        type: String,
+        // type: mongoose.ObjectId,
         require: true,
         trim: true
     },
@@ -41,13 +41,14 @@ const GrantsSchema = mongoose.Schema({
     closeDate: {
         type: Date,
         require: true,
+        // default: Date.now()
     },
     docType: {
         type: String,
         require: true,
         trim: true
     }
-});
+}, { _id: false });
 
 
 module.exports = mongoose.model( 'Grant', GrantsSchema );
