@@ -9,4 +9,8 @@ router.get('/',
     grantController.getGrants
 );
 
+router.post('/update',
+    grantController.updateGrants
+);
+
 module.exports = router;
