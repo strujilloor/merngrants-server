@@ -34,12 +34,12 @@ const GrantsSchema = mongoose.Schema({
         trim: true
     },
     openDate: {
-        type: Date,
+        type: String,
         require: true,
         // default: Date.now()
     },
     closeDate: {
-        type: Date,
+        type: String,
         require: true,
         // default: Date.now()
     },
