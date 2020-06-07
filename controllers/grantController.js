@@ -31,19 +31,29 @@ exports.updateGrants = async (req, res) => {
     try {
         // Get grants from grants.gov
         const response = await axios.post('https://www.grants.gov/grantsws/rest/opportunities/search/', {startRecordNum: 0, sortBy: "openDate|desc", oppStatuses: "forecasted|posted", rows: 1000});
-        // note: change the amount of data with rows (1000)
-
         const grants = response.data.oppHits;
 
-        // Update and validate if grant exists
-        let newGrant;
-        let grantExists
+        // Delete old Grants
+        await deleteGrants();
 
         await Grant.insertMany( grants );
 
         // confirmation message
         res.json({ msg: 'Grants Updated' });
         // res.json( grants );
+    } catch (error) {
+        console.log(error);
+        res.status(400).send('There was an error');
+    }
+}
+
+const deleteGrants = async (req, res) => {
+    console.log('From deleteGrants');
+
+    try {
+        await Grant.remove({});
+        // confirmation message
+        // res.json({ msg: 'Grants Deleted' });
     } catch (error) {
         console.log(error);
         res.status(400).send('There was an error');
