@@ -1,5 +1,6 @@
 const Grant = require('../models/Grant');
 const axios = require('axios');
+const qs = require('querystring');
 
 exports.getGrants = async (req, res) => {
     console.log('From getGrants');
@@ -45,6 +46,36 @@ exports.updateGrants = async (req, res) => {
         console.log(error);
         res.status(400).send('There was an error');
     }
+}
+
+exports.getGrant = async (req, res) => {
+    console.log('From getGrant');
+
+    console.log('req: ', req.query);
+
+    const { id } = req.query;
+
+    try {
+
+        // Get Grant's details from grants.gov API
+        const url = 'https://www.grants.gov/grantsws/rest/opportunity/details/';
+        const requestBody = {
+            oppId: id
+        };
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        };
+        const response = await axios.post(url, qs.stringify(requestBody), config);
+        const grant = response.data;
+
+        res.json({ grant });
+    } catch (error) {
+        console.log(error);
+        res.status(400).send(error);
+    }
+
 }
 
 const deleteGrants = async (req, res) => {

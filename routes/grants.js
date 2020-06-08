@@ -14,4 +14,8 @@ router.get('/update',
     grantController.updateGrants
 );
 
+router.get('/grant',
+    grantController.getGrant
+);
+
 module.exports = router;
