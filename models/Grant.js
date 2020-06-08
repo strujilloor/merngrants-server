@@ -47,6 +47,10 @@ const GrantsSchema = mongoose.Schema({
         type: String,
         require: true,
         trim: true
+    },
+    details: {
+        type: mongoose.Schema.Types.Mixed,
+        require: false
     }
 }, { id: false });
 

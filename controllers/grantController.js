@@ -70,7 +70,14 @@ exports.getGrant = async (req, res) => {
         const response = await axios.post(url, qs.stringify(requestBody), config);
         const grant = response.data;
 
-        res.json({ grant });
+        // Update DB Grant
+        const updatedGrant = await Grant.findOneAndUpdate(
+            { id },
+            { details: grant },
+            { new: true }
+        );
+
+        res.json({ updatedGrant });
     } catch (error) {
         console.log(error);
         res.status(400).send(error);
